@@ -1,0 +1,17 @@
+com\sih\sanskriti\model\CultureStory.class
+com\sih\sanskriti\repository\CultureStoryRepository.class
+com\sih\sanskriti\controller\FileUploadController.class
+com\sih\sanskriti\model\State.class
+com\sih\sanskriti\config\WebMvcConfig.class
+com\sih\sanskriti\repository\StateRepository.class
+com\sih\sanskriti\repository\DistrictRepository.class
+com\sih\sanskriti\repository\PlaceRepository.class
+com\sih\sanskriti\model\Place.class
+com\sih\sanskriti\config\DataInitializer.class
+com\sih\sanskriti\repository\CultureItemRepository.class
+com\sih\sanskriti\controller\StateController.class
+com\sih\sanskriti\model\CultureItem.class
+com\sih\sanskriti\model\District.class
+com\sih\sanskriti\controller\DistrictController.class
+com\sih\sanskriti\SanskritiApplication.class
+com\sih\sanskriti\controller\CultureStoryController.class

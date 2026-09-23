@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanskriti Darshan | संस्कृति दर्शन - India's Culture & Heritage "God's Eye" Explorer</title>
+
+    <!-- Google Fonts: Cinzel & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Leaflet CSS for Map Engine -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ====================================================================
+         Navbar
+         ==================================================================== -->
+    <nav class="navbar">
+        <div class="brand-container">
+            <div class="brand-logo-icon">
+                <i class="fas fa-om"></i>
+            </div>
+            <div class="brand-text">
+                <h1>संस्कृति दर्शन</h1>
+                <span>Sanskriti Darshan &bull; SIH 2026</span>
+            </div>
+        </div>
+
+        <div class="nav-center">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="global-search-input" placeholder="Search any State, City, Dance, Food, or Monument...">
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <a href="#map-section" class="nav-link"><i class="fas fa-globe-asia"></i> God's Eye Map</a>
+            <a href="#stories-section" class="nav-link"><i class="fas fa-feather-alt"></i> Virasat Stories</a>
+            <button class="btn-royal" id="btn-open-post-modal">
+                <i class="fas fa-plus-circle"></i> Share Your Culture
+            </button>
+        </div>
+    </nav>
+
+    <!-- ====================================================================
+         Hero Section
+         ==================================================================== -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <span class="hero-tag"><i class="fas fa-star"></i> Smart India Hackathon 2026 Initiative</span>
+            <h2 class="hero-title">Experience the Living Soul of India Through God's Eye</h2>
+            <p class="hero-subtitle">
+                Explore all 28 States and 8 Union Territories from an aerial satellite perspective. Drill down into every historical city to discover why it's famous, its monumental landmarks, ancient dance traditions, authentic culinary secrets, and soulful folk melodies—while empowering citizens to celebrate underrated local culture.
+            </p>
+
+            <div class="hero-stats-row">
+                <div class="stat-item">
+                    <span class="stat-number">28</span>
+                    <span class="stat-label">States</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">8</span>
+                    <span class="stat-label">Union Territories</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">750+</span>
+                    <span class="stat-label">Cultural Districts</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">10,000+</span>
+                    <span class="stat-label">Underrated Gems</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================================
+         Interactive "God's Eye" Map Section
+         ==================================================================== -->
+    <section class="map-section" id="map-section">
+        <div class="section-header">
+            <div>
+                <h2>Interactive "God's Eye" Satellite Map</h2>
+                <p>Select a State or Union Territory below to initiate cinematic camera fly-to, then select a City/District to uncover its cultural heritage.</p>
+            </div>
+
+            <div class="map-control-bar">
+                <!-- State Selector -->
+                <div class="state-select-wrapper">
+                    <select id="state-selector">
+                        <option value="">-- Choose a State or UT to Explore --</option>
+                    </select>
+                </div>
+
+                <!-- Layer Toggles -->
+                <div class="map-layer-toggles">
+                    <button class="map-layer-btn active" data-layer="godEye" title="Satellite View">
+                        <i class="fas fa-satellite"></i> God's Eye
+                    </button>
+                    <button class="map-layer-btn" data-layer="topo" title="Topographic Elevation">
+                        <i class="fas fa-mountain"></i> Topo
+                    </button>
+                    <button class="map-layer-btn" data-layer="culturalAtlas" title="Cultural Atlas">
+                        <i class="fas fa-map"></i> Atlas
+                    </button>
+                </div>
+
+                <!-- 3D Perspective Tilt Button -->
+                <button class="btn-icon-action" id="btn-toggle-tilt" title="Toggle 3D Bird's Eye Angle">
+                    <i class="fas fa-cube"></i> 3D Tilt View
+                </button>
+
+                <!-- Reset Button -->
+                <button class="btn-icon-action" id="btn-reset-view" title="Reset to Pan-India Overview">
+                    <i class="fas fa-redo-alt"></i> Reset India View
+                </button>
+            </div>
+        </div>
+
+        <!-- Map Perspective Frame -->
+        <div class="map-perspective-frame">
+            <div id="map" class="map-container"></div>
+
+            <!-- Head-Up Display (HUD) for Selected State -->
+            <div class="map-hud-overlay hidden" id="map-hud">
+                <span class="hud-badge" id="hud-state-type">State of India</span>
+                <h3 class="hud-title" id="hud-state-title">State Name</h3>
+                <p class="hud-capital" id="hud-state-capital">Capital: City</p>
+                <p class="hud-desc" id="hud-state-desc">State description here.</p>
+
+                <div class="hud-districts-heading">
+                    <i class="fas fa-city"></i> Select City / District to Explore:
+                </div>
+                <div class="hud-districts-chips" id="hud-districts-list">
+                    <!-- Dynamic District pills -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====================================================================
+         Virasat Stories - Community Cultural Contributions
+         ==================================================================== -->
+    <section class="stories-section" id="stories-section">
+        <div class="section-header">
+            <div>
+                <h2>Virasat Stories &bull; विरासत गाथा</h2>
+                <p>Citizen stories, photographs, and videos celebrating the untold, underrated traditions of our homeland.</p>
+            </div>
+
+            <button class="btn-royal" onclick="openPostModal()">
+                <i class="fas fa-camera"></i> Share Your Culture
+            </button>
+        </div>
+
+        <!-- Filter & Sort Bar -->
+        <div class="stories-filter-bar">
+            <div class="category-chips-list">
+                <button class="category-chip active" data-category="ALL">All Traditions</button>
+                <button class="category-chip" data-category="Hidden Gem">✨ Hidden Gems</button>
+                <button class="category-chip" data-category="Folklore">📜 Folklore & Stories</button>
+                <button class="category-chip" data-category="Food">🍲 Traditional Food</button>
+                <button class="category-chip" data-category="Dance">🎭 Folk Dance & Art</button>
+                <button class="category-chip" data-category="Ritual">🔥 Ancient Rituals</button>
+            </div>
+
+            <div class="filter-dropdowns">
+                <select id="story-state-filter">
+                    <option value="ALL">All States & UTs</option>
+                </select>
+
+                <select id="story-sort-select">
+                    <option value="newest">Newest First</option>
+                    <option value="popular">Most Applauded</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Stories Grid Feed -->
+        <div class="stories-grid" id="stories-grid">
+            <!-- Dynamic story cards inserted by app.js -->
+        </div>
+    </section>
+
+    <!-- ====================================================================
+         Cultural Heritage Drawer (Sliding Panel for District/City Details)
+         ==================================================================== -->
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+    <aside class="cultural-drawer" id="district-drawer">
+        <!-- Drawer Header with Hero Image -->
+        <div class="drawer-header">
+            <img src="" alt="Hero Image" class="drawer-hero-img" id="drawer-hero-image">
+            <div class="drawer-header-overlay">
+                <span class="drawer-state-tag" id="drawer-state-name">State Name</span>
+                <h3 id="drawer-district-title">City Name</h3>
+            </div>
+            <button class="drawer-close-btn" id="btn-close-drawer" title="Close Drawer">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Cultural Tabs Navigation -->
+        <div class="cultural-tabs-nav">
+            <button class="cultural-tab-btn active" data-tab="why-famous">
+                <i class="fas fa-star"></i>
+                <span>Why Famous</span>
+            </button>
+            <button class="cultural-tab-btn" data-tab="places">
+                <i class="fas fa-monument"></i>
+                <span>Monuments</span>
+            </button>
+            <button class="cultural-tab-btn" data-tab="dances">
+                <i class="fas fa-theater-masks"></i>
+                <span>Dances</span>
+            </button>
+            <button class="cultural-tab-btn" data-tab="food">
+                <i class="fas fa-utensils"></i>
+                <span>Cuisines</span>
+            </button>
+            <button class="cultural-tab-btn" data-tab="songs">
+                <i class="fas fa-music"></i>
+                <span>Music & Songs</span>
+            </button>
+            <button class="cultural-tab-btn" data-tab="underrated">
+                <i class="fas fa-gem"></i>
+                <span>Underrated</span>
+            </button>
+        </div>
+
+        <!-- Drawer Body with Scrollable Tab Panes -->
+        <div class="drawer-scroll-body">
+            <!-- 1. Tab: Why Famous & History -->
+            <div class="cultural-tab-pane active" id="tab-content-why-famous">
+                <div class="tab-section-block">
+                    <h4><i class="fas fa-award"></i> Why is this City Famous?</h4>
+                    <p id="tab-why-famous-text">Loading details...</p>
+                </div>
+                <div class="tab-section-block">
+                    <h4><i class="fas fa-landmark"></i> Historical Significance & Origins</h4>
+                    <p id="tab-historical-text">Loading history...</p>
+                </div>
+                <div class="tab-section-block">
+                    <h4><i class="fas fa-info-circle"></i> Cultural Overview</h4>
+                    <p id="tab-district-desc"></p>
+                </div>
+            </div>
+
+            <!-- 2. Tab: Famous Places & Monuments -->
+            <div class="cultural-tab-pane" id="tab-content-places">
+                <div id="tab-places-grid"></div>
+            </div>
+
+            <!-- 3. Tab: Famous Dances -->
+            <div class="cultural-tab-pane" id="tab-content-dances">
+                <div id="tab-dances-grid"></div>
+            </div>
+
+            <!-- 4. Tab: Famous Food & Cuisines -->
+            <div class="cultural-tab-pane" id="tab-content-food">
+                <div id="tab-food-grid"></div>
+            </div>
+
+            <!-- 5. Tab: Famous Music & Songs -->
+            <div class="cultural-tab-pane" id="tab-content-songs">
+                <div id="tab-songs-grid"></div>
+            </div>
+
+            <!-- 6. Tab: Underrated Cultural Gems -->
+            <div class="cultural-tab-pane" id="tab-content-underrated">
+                <div class="tab-section-block">
+                    <h4><i class="fas fa-eye-slash"></i> Hidden & Underrated Cultural Heritage</h4>
+                    <p id="tab-underrated-text">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drawer Footer CTA -->
+        <div class="drawer-footer-actions">
+            <button class="btn-royal btn-full" id="btn-share-for-district">
+                <i class="fas fa-pen-fancy"></i> Share a Story about this Place
+            </button>
+        </div>
+    </aside>
+
+    <!-- ====================================================================
+         "Share Your Culture" Modal Dialog
+         ==================================================================== -->
+    <div class="post-modal-backdrop" id="post-modal-backdrop"></div>
+    <div class="post-modal" id="post-modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-feather-alt" style="color: var(--primary-saffron);"></i> Share Your Culture</h3>
+            <button class="modal-close-btn" id="btn-close-post-modal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <form id="story-form">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="post-title">Title of Cultural Tradition or Story *</label>
+                    <input type="text" id="post-title" placeholder="e.g. The 500-Year-Old Clay Pottery of Khurja" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="post-author">Your Name / Pseudonym</label>
+                        <input type="text" id="post-author" placeholder="e.g. Ayush Jha">
+                    </div>
+                    <div class="form-group">
+                        <label for="post-category-select">Category *</label>
+                        <select id="post-category-select">
+                            <option value="Hidden Gem">✨ Hidden Gem / Underrated</option>
+                            <option value="Folklore & Story">📜 Folklore & Ancient Story</option>
+                            <option value="Traditional Food">🍲 Traditional Food / Secret Recipe</option>
+                            <option value="Folk Art & Dance">🎭 Folk Art, Craft & Dance</option>
+                            <option value="Ancient Ritual">🔥 Sacred Ancient Ritual</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="post-state-select">State or UT *</label>
+                        <select id="post-state-select" required>
+                            <option value="">-- Select State / UT --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="post-district-input">City or District</label>
+                        <input type="text" id="post-district-input" placeholder="e.g. Varanasi, Hampi, Kutch">
+                    </div>
+                </div>
+
+                <!-- Media Selection: Photo Upload or Video Embed -->
+                <div class="form-group">
+                    <label>Attach Media (Photo or Video)</label>
+                    <div class="media-type-radios">
+                        <label class="media-radio-label">
+                            <input type="radio" name="mediaType" value="IMAGE" checked>
+                            <i class="fas fa-image"></i> Photo Upload
+                        </label>
+                        <label class="media-radio-label">
+                            <input type="radio" name="mediaType" value="VIDEO">
+                            <i class="fas fa-video"></i> Video Link (YouTube / Web)
+                        </label>
+                    </div>
+
+                    <!-- Photo Upload Group -->
+                    <div id="group-photo-upload">
+                        <div class="file-dropzone" onclick="document.getElementById('post-file-input').click()">
+                            <i class="fas fa-cloud-upload-alt fa-2x" style="color: var(--temple-gold); margin-bottom: 0.5rem; display: block;"></i>
+                            <span>Click to upload a photograph from your device</span>
+                            <input type="file" id="post-file-input" accept="image/*" style="display: none;">
+                        </div>
+                        <div class="media-preview-container hidden" id="post-preview-container"></div>
+                    </div>
+
+                    <!-- Video Link Group -->
+                    <div id="group-video-url" class="hidden">
+                        <input type="url" id="post-video-url" placeholder="https://www.youtube.com/watch?v=... or MP4 URL">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="post-story-text">Your Story Narrative *</label>
+                    <textarea id="post-story-text" rows="5" placeholder="Share why this cultural tradition, recipe, or place is special and why more people across India should know about it..." required></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closePostModal()">Cancel</button>
+                <button type="submit" class="btn-royal">
+                    <i class="fas fa-paper-plane"></i> Publish Story
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- ====================================================================
+         Footer
+         ==================================================================== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-om"></i> संस्कृति दर्शन &bull; Sanskriti Darshan
+            </div>
+            <p class="footer-text">
+                Dedicated to preserving, documenting, and celebrating the peerless diversity of India's culture and heritage.
+            </p>
+            <p class="footer-copy">
+                Smart India Hackathon (SIH 2026) Project &bull; Built with HTML5, CSS3, JavaScript, Java Spring Boot & PostgreSQL.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Cultural Dataset & Application Scripts -->
+    <script src="js/culturalData.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

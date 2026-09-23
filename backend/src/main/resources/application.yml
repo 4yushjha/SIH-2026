@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: sanskriti-backend
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.sih.sanskriti: INFO
+    org.springframework.web: INFO
